@@ -1,7 +1,11 @@
 import cv2
 import numpy as np
-import matplotlib.pylab as plt
+"""
+학습데이터 자동 생성 및 라벨링을 위한 기초 작업
+"""
 
+# 이미지 자동 합성 테스트입니다.
+# 일단 단순하게 검은색 배경을 잘라서 덧씌우는것 뿐이므로 부자연스럽게 보임. 차후에 개선할 것
 img_grass = cv2.imread("./test_image/grass18.jpg")
 img_soil = cv2.imread("./test_image/soil1.jpg")
 
