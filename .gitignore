@@ -1,6 +1,8 @@
-
 # Created by https://www.toptal.com/developers/gitignore/api/python,vscode,pycharm,jupyternotebooks,django
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,vscode,pycharm,jupyternotebooks,django
+
+## seunghoon ##
+seunghoon/dataset/
 
 ### Custom ###
 references/
