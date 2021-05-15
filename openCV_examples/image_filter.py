@@ -174,26 +174,29 @@ def plant_boundary(image_path):
 
     return morph_gradient
 
-boundary_img1 = plant_boundary("./test_image/for_rec.jpg")
-boundary_img2 = plant_boundary("./test_image/se1.png")
+
+def main():
+    boundary_img1 = plant_boundary("./test_image/for_rec.jpg")
+    boundary_img2 = plant_boundary("./test_image/se1.png")
 
 
-# case1_img1 = point_clustering("./test_image/for_rec.jpg")
-# case1_img2 = point_clustering("./test_image/se1.png")
-#
-# case2_img1 = label_clustering("./test_image/for_rec.jpg")
-# case2_img2 = label_clustering("./test_image/se1.png")
+    # case1_img1 = point_clustering("./test_image/for_rec.jpg")
+    # case1_img2 = point_clustering("./test_image/se1.png")
+    #
+    # case2_img1 = label_clustering("./test_image/for_rec.jpg")
+    # case2_img2 = label_clustering("./test_image/se1.png")
 
+    # 1차 처리 및indows() 2차처리 이미지 디스플레이
+    cv2.imshow('boundary_img1', boundary_img1)
+    cv2.imshow('boundary_img2', boundary_img2)
+    # cv2.imshow('case1_img1', case1_img1)
+    # cv2.imshow('case1_img2', case1_img2)
+    # cv2.imshow('case2_img1', case2_img1)
+    # cv2.imshow('case2_img2', case2_img2)
+    cv2.waitKey()
+    cv2.destroyAllW
 
-
-# 1차 처리 및 2차처리 이미지 디스플레이
-cv2.imshow('boundary_img1', boundary_img1)
-cv2.imshow('boundary_img2', boundary_img2)
-# cv2.imshow('case1_img1', case1_img1)
-# cv2.imshow('case1_img2', case1_img2)
-# cv2.imshow('case2_img1', case2_img1)
-# cv2.imshow('case2_img2', case2_img2)
-cv2.waitKey()
-cv2.destroyAllWindows()
+if __name__ == "__main__":
+    main()
 
 
