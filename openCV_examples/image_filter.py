@@ -51,6 +51,7 @@ def labeling(binary_mask, front_image, filter_size):
     Args:
         binary_mask: component 인식을 위한 그레이스케일 이미지, numpy ndarray 객체
         front_image: 인식 결과를 합성할 원본 이미지, numpy ndarray 객체
+        filter_size: threshold 크기, 이 값보다 작은 크기의 component는 무시한다, int 객체
 
     returns:
         그레이스케일 이미지를 분석하여 객체 인식 결과를 원본 이미지에 라벨링한 이미지 리턴,
