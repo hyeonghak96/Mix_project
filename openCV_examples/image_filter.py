@@ -17,10 +17,11 @@ def color_filter(img, lower, upper):
     Args:
         img: 처리 전 이미지, 3차원 numpy ndarray 객체
         lower: hsv 색공간에서 하한선, 길이가 3인 numpy array 객체
-        upper: hsv 색공간에서 하한선, 길이가 3인 numpy array 객체
+        upper: hsv 색공간에서 상한선, 길이가 3인 numpy array 객체
 
     returns:
-        지정 범위의 색을 제외한것을 False, 지정 범위의 색을 포함한것을 True로 하는 2차원 numpy ndarray 객체
+        지정 범위의 색을 제외한것을 False, 지정 범위의 색을 포함한것을 True로 하는 binary 이미지,
+        2차원 numpy ndarray 객체
     """
     mask = cv2.inRange(img, lower, upper)
     result = cv2.bitwise_and(img, img, mask=mask)
@@ -37,7 +38,7 @@ def boundary(img):
         img: 경계선을 감지할 이미지, cv2 img 객체
 
     returns:
-        경계선을 True로 하는 2차원 numpy ndarray 객체
+        경계선을 True로 하는 binary 이미지, 2차원 numpy ndarray 객체
    """
     blur = cv2.GaussianBlur(img, ksize=(3, 3), sigmaX=50)
     result = cv2.Canny(blur, 100, 200)
@@ -49,13 +50,13 @@ def labeling(binary_mask, front_image, filter_size):
     이어진 부분을 한 객체로 인식하고 인식된 부분을 직사각형으로 라벨링하여 표시하는 함수
 
     Args:
-        binary_mask: component 인식을 위한 그레이스케일 이미지, numpy ndarray 객체
+        binary_mask: component 인식을 위한 binary 이미지, numpy ndarray 객체
         front_image: 인식 결과를 합성할 원본 이미지, numpy ndarray 객체
         filter_size: threshold 크기, 이 값보다 작은 크기의 component는 무시한다, int 객체
 
     returns:
-        그레이스케일 이미지를 분석하여 객체 인식 결과를 원본 이미지에 라벨링한 이미지 리턴,
-        numpy ndarray 객체
+        binary 이미지를 분석하여 객체를 인식하고 그 결과를 원본 이미지에 라벨링한 bgr 이미지 리턴,
+        3차원 numpy ndarray 객체
     """
     count, labels, stats, centroids = cv2.connectedComponentsWithStats(binary_mask)
     # img_gbr = cv2.cvtColor(binary_mask, cv2.COLOR_GRAY2BGR)
@@ -186,7 +187,6 @@ def main():
     # case2_img1 = label_clustering("./test_image/for_rec.jpg")
     # case2_img2 = label_clustering("./test_image/se1.png")
 
-    # 1차 처리 및indows() 2차처리 이미지 디스플레이
     cv2.imshow('boundary_img1', boundary_img1)
     cv2.imshow('boundary_img2', boundary_img2)
     # cv2.imshow('case1_img1', case1_img1)
