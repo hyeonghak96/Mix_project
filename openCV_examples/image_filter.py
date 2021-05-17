@@ -163,7 +163,7 @@ def plant_boundary(image_path):
     clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
     clahe_image = clahe.apply(image_gray)
 
-    # 경게검출, 색상 검출
+    # 경계검출, 색상 검출
     boundary_canny = boundary(clahe_image)
     color_mask = color_filter(image_hsv, lower1, upper1)
 
