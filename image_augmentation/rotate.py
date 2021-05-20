@@ -18,7 +18,7 @@ def path_decom(file_path):
         (파일명, 파일 확장자, 디렉토리 경로) 형식의 튜플 반환
         이때 튜플의 각 성분은 str 객체이다.
     """
-    filename_re = re.compile(r'(?<=/)[a-zA-Z0-9_-]+(?=\..+$)')
+    filename_re = re.compile(r'(?<=/)((?!/).)*(?=\..+$)')
     filename_match = filename_re.search(file_path)
     filename_index = filename_match.span()
 
@@ -104,6 +104,7 @@ def rotation_json(path):
     }
 
     for file in file_list:
+        print(file)
         if re.search(r'(_r90|_r180|_r270)\..+$', file):
             continue
         if re.search(r'\.json$', file):
