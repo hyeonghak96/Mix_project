@@ -30,9 +30,9 @@ def path_decom(file_path):
 
 def save_rotate(img_path):
     """
-    "path/[a-zA-Z0-9_-]+.*" 형식의 이미지 경로를 읽어
+    "path/*.*" 형식의 이미지 경로를 읽어
     시계방향으로 90도, 180도, 270도 회전한 이미지를
-    각각 [a-zA-Z0-9_-]+_r90.*, [a-zA-Z0-9_-]+_r180.*, [a-zA-Z0-9_-]+_r270.*
+    각각 *_r90.*, *_r180.*, *_r270.*
     의 파일명으로 같은 디렉토리에 각각 저장함
 
     Args:
@@ -105,7 +105,7 @@ def rotation_json(path):
 
     for file in file_list:
         print(file)
-        if re.search(r'(_r90|_r180|_r270)\..+$', file):
+        if re.search(r'.*(_r90|_r180|_r270).*\..+$', file):
             continue
         if re.search(r'\.json$', file):
             continue
