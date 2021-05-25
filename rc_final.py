@@ -1,7 +1,7 @@
 from gpiozero import Robot
 import time
 import camera_capture as camera
-import aws_fileupload
+import aws_file
 
 robot = Robot(left=(13,19,26), right=(20,16,21))
 
