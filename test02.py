@@ -8,20 +8,25 @@ import time
 from queue import Queue
 
 #보낼 파일 이름 공간 확보
-file_name=[]
-path = '/home/pi/Desktop/picture'
+# file_name=[]
+# path = '/home/pi/Desktop/picture'
 # send_file_name = file_name[0]
 #클라이언트 소켓 연결
-ip = '192.168.0.15'
+# ip = '192.168.0.15'
 # ip='13.48.157.80'
 # ip = '172.30.1.95'
-port=9999
+# port=9999
 
-#메인스레드 첫번째 클라이언트 연결
-mainSocket=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-mainSocket.connect((ip,port))
-print("첫번째 클라이언트가 연결되었습니다.")
+class MetaSingleton(type):
+    _instances = {}
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            cls._instances[cls] = super(MetaSingleton, cls).__call__(*args, **kwargs)
+        return cls._instances[cls]
 
+class Settings(MetaSingleton):
+    def __init__(self):
+        self.path = '/home/pi/Desktop/picture'
 
 
 #rc카 전진 -> 사진 캡처 -> 파일이름 저장 후 전송 
@@ -29,30 +34,37 @@ def rc_repeat():
     rc_test.go_front()
     camera.imagefilesave()
     time.sleep(1)
-    file_name= os.listdir(path)
-    sendingfile =file_name[0].encode()
-    mainSocket.send(sendingfile)
     # aws.fileupload()
 
-#클라이언트 소켓 연결 -> 메인스레드 데이터 전송
-def socket_thread():
-    clientSocket=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-    clientSocket.connect((ip,port))
-    print("두번째 클라이언트가 연결되었습니다.")
-    #데이터 지속적으로 수신
-    while True:
-        data = clientSocket.recv(1024)
-        decdata=data.decode("utf-8")
-        time.sleep(1)
-        print("받은 데이터 ",decdata)
-        
-        #데이터 메인스레드로 전송
-        q.put(decdata)
-        time.sleep(1)
-        q.put(None)
-        if decdata == "종료":
-            break         
-    clientSocket.close()
+class RcSocket(threading.Thread):
+    def __init__(self, ip, port, q):
+        self.clientSocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+        self.clientSocket.connect((ip,port))
+        self.q = q
+
+    def _clientsocket_send(self):
+        file_name = os.listidr(Settings().path)
+        sendingfile = file_name[0].encode()
+        self.clientSocket.send(sendingfile)
+
+    def _receive_data(self, q):
+        while True:
+            data = self.clientSocket.recv(1024)
+            decdata = data.decode("utf-8")
+            time.sleep(1)
+            print("받은 데이터 ", decdata)
+
+            # 데이터 메인스레드로 전송
+            q.put(decdata)
+            time.sleep(1)
+            q.put(None)
+            if decdata == "종료":
+                break
+        self.clientSocket.close()
+
+    def run(self):
+        self._clientsocket_send()
+        self._receive_data(self.q)
 
 #메인 스레드
 def receiver(q):
@@ -80,18 +92,20 @@ def receiver(q):
             break
 
 def run():
+    TASK_QUEUE = Queue()
     while True:
         rc_repeat()
-        receiver(q)
+        socket_instance = RcSocket('192.168.0.15', '9999', TASK_QUEUE)
+        socket_instance.start()
+        receiver(TASK_QUEUE)
 
 
 # 소켓 스레드와 스레드에 필요한 큐 선언 
-q= Queue()
-sthread = threading.Thread(target= socket_thread,args=())
-
+# q= Queue()
+# sthread = threading.Thread(target= socket_thread,args=())
 
 if __name__=='__main__':
-    sthread.start()
+    # sthread.start()
     run()
 
 
