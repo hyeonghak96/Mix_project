@@ -8,25 +8,12 @@ import time
 from queue import Queue
 
 #보낼 파일 이름 공간 확보
-file_name=[]
-path = '/home/pi/Desktop/picture'
+# file_name=[]
+# path = '/home/pi/Desktop/picture'
 #클라이언트 소켓 연결
 # ip = '192.168.0.15'
-ip='13.48.157.80'
-port=9999
-
-#메인스레드 첫번째 클라이언트 연결
-
-class MetaSingleton(type):
-    _instances = {}
-    def __call__(cls, *args, **kwargs):
-        if cls not in cls._instances:
-            cls._instances[cls] = super(MetaSingleton, cls).__call__(*args, **kwargs)
-        return cls._instances[cls]
-
-class Settings(MetaSingleton):
-    def __init__(self):
-        self.path = '/home/pi/Desktop/picture'
+# ip='13.48.157.80'
+# port=9999
 
 
 #rc카 전진 -> 사진 캡처 -> 파일이름 저장 후 전송 
@@ -68,29 +55,33 @@ class RcSocket(threading.Thread):
         self._receive_data(self.q)
 
 #메인 스레드
-def receiver(q):
-    while True:
-        data =q.get()
-        print(f'receiver:{data}')
-        print('receiver done')
-        
-        #수신값에 따른 모듈제어
-        if data == "1":
-            water_pump.motorforward(1)
-            time.sleep(2)
-            camera.removeAllFile()
-            break
+class MainThread:
+    def __init__(self, q):
+        self.q = q
 
-        if data == "2":
-            water_pump.motor_two_forward(1)
-            time.sleep(2)
-            camera.removeAllFile()
-            break
+    def receiver(self):
+        while True:
+            data =self.q.get()
+            print(f'receiver:{data}')
+            print('receiver done')
 
-        if data == "healthy":
-            time.sleep(1.5)
-            camera.removeAllFile()
-            break
+            #수신값에 따른 모듈제어
+            if data == "1":
+                water_pump.motorforward(1)
+                time.sleep(2)
+                camera.removeAllFile()
+                break
+
+            if data == "2":
+                water_pump.motor_two_forward(1)
+                time.sleep(2)
+                camera.removeAllFile()
+                break
+
+            if data == "healthy":
+                time.sleep(1.5)
+                camera.removeAllFile()
+                break
 
 def run():
     TASK_QUEUE = Queue()
@@ -98,7 +89,8 @@ def run():
         rc_repeat()
         socket_instance = RcSocket('192.168.0.15', 9999, TASK_QUEUE)
         socket_instance.start()
-        receiver(TASK_QUEUE)
+        main_instance = MainThread(TASK_QUEUE)
+        main_instance.receiver()
 
 if __name__=='__main__':
     run()
