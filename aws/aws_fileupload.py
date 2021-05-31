@@ -5,7 +5,7 @@ import glob
 class Settings:
     def __init__(self):
         self.input_path = "/home/pi/Desktop/picture/"
-        self.files = glob.glob(os.path.join(input_path,'*'))
+        self.files = glob.glob(os.path.join(self.input_path,'*'))
         self.stored_names = list(map(lambda x: x.split("/")[5], files))
         self.my_bucket = "hyeonghakbucket"
         self.s3 = boto3.client(
