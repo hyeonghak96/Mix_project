@@ -5484,8 +5484,7 @@ h2.text-center:after {
     padding: 6px 0px;
     margin: 0px 4px;
     line-height: 1.42857;
-    background-color: #fff;
-    border-top: 4px solid #94cf8a;
+    border-top: 4px solid #a5b19a;
     /* border-bottom: 4px solid #94cf8a; */
     -webkit-transition: all .2s ease-in-out;
     -o-transition: all .2s ease-in-out;
@@ -5495,12 +5494,16 @@ h2.text-center:after {
     height: auto;
 }
 
+.custom-thumbnailbox-select{
+    border-bottom: 4px solid #a5b19a;
+}
+
 .custom-color-weed{
-    border-color: #8acfc5;
+    border-color: #9aa5b1;
 }
 
 .custom-color-disease{
-    border-color: #cf8a94;
+    border-color: #b19aa5;
 }
 
 .custom-img-thumbnail{
@@ -5520,7 +5523,6 @@ h2.text-center:after {
 }
 
 .custom-infobox{
-    background-color: #eee;
     text-align: left;
     height: 100%;
 }
@@ -5530,8 +5532,45 @@ h2.text-center:after {
     padding-right: 0px;
 }
 
+.custom-infospace{
+    padding: 10px 0px;
+    margin: 0px 0px 10px 0px;
+}
+
+.custom-infospacetitle{
+    margin: 0px 0px 10px 0px;
+}
+
+.custom-nomargin{
+    margin: 0;
+}
+
+.custom-fontcolor-coolwhite2{
+    color: #9aa5b1;
+}
+
+.custom-background-dark{
+    background-color: #1f2933;
+}
+
+.custom-fontcolor-coolwhite{
+    color: #d9e2ec;
+}
+
+.custom-background-dark2{
+    background-color: #323f4b;
+}
+
+.custom-background-dark3{
+    background-color: #3c4f63;
+}
+
 .notosanskr * { 
     font-family: 'Noto Sans KR', sans-serif;
+}
+
+.nanumsquare {
+    font-family: 'NanumSquare', sans-serif !important;
 }
 
 /*# sourceMappingURL=main.faaf51f9.map*/
