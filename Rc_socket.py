@@ -42,6 +42,7 @@ def rc_repeat():
 
 class RcSocket(threading.Thread):
     """
+    서버와 소켓 통신을 위한 클래스. 런타임동안 종료하지 않는다.
 
     Attrubutes:
         file_queue: 서버로부터 받은 값을 저장하는 큐, Queue 객체
@@ -55,12 +56,21 @@ class RcSocket(threading.Thread):
         self.status_queue = status_queue
 
     def _clientsocket_send(self):
+        """
+        라즈베리파이에 저장된 사진을 모두 연결된 서버로 전송함
+        """
         file_name = os.listdir('/home/pi/Desktop/picture')
         sendingfile = file_name[0].encode()
         self.clientSocket.send(sendingfile)
         # camera.removeAllFile(path)
 
     def _receive_data(self, file_queue):
+        """
+        서버로부터의 응답을 큐에 저장하는 메서드
+
+        Args:
+            file_queue: 서버로부터의 응답을 저장하는 큐, Queue 객체
+        """
         data = self.clientSocket.recv(1024)
         decdata = data.decode("utf-8")
         time.sleep(1)
@@ -71,6 +81,10 @@ class RcSocket(threading.Thread):
         # time.sleep(1)
 
     def run(self):
+        """
+        스레드 실행을 위한 메서드
+        차량 상태에 따라 실행이 제어된다.
+        """
         while True:
             if self.status_queue.qsize() == 0:
                 continue
@@ -81,12 +95,27 @@ class RcSocket(threading.Thread):
 
 # 메인 스레드
 class MainThread(threading.Thread):
+    """
+    서버로부터 받은 값에 따라 차량을 제어하기 위한 클래스
+
+    Attrubutes:
+        file_queue: 서버로부터 받은 값을 저장하는 큐, Queue 객체
+        status_queue: 차량 제어를 위한 큐, Queue 객체
+    """
     def __init__(self, file_queue, status_queue):
         super().__init__()
         self.file_queue = file_queue
         self.status_queue = status_queue
 
     def receiver(self, file_queue, status_queue):
+        """
+        서버로부터 받은 값에 따라 차량을 제어하고 차량의 현재 상태를 업데이트 한 뒤 저장한다.
+        서버로부터 받은 값이 있을때만 값을 차량을 제어한다.
+
+        Args:
+            file_queue: 서버로부터 받은 값을 저장하는 큐, Queue 객체
+            status_queue: 차량 제어를 위한 큐, Queue 객체
+        """
         while True:
             if self.file_queue.qsize() == 0:
                 continue
@@ -110,10 +139,16 @@ class MainThread(threading.Thread):
             status_queue.put(1)
 
     def run(self):
+        """
+        스레드 실행을 위한 메서드
+        """
         self.receiver(self.file_queue,self.status_queue)
 
 
 def run():
+    """
+    전체 통신을 위한 함수
+    """
     file_queue = Queue()
     status_queue = Queue()
 
