@@ -22,7 +22,6 @@ class MetaSingleton(type):
     _instances = {}
 
     def __call__(cls, *args, **kwargs):
-
         if cls not in cls._instances:
             cls._instances[cls] = super(MetaSingleton, cls).__call__(*args, **kwargs)
         return cls._instances[cls]
@@ -43,7 +42,8 @@ def rc_repeat():
 
 class RcSocket(threading.Thread):
     """
-    Attributes:
+
+    Attrubutes:
         file_queue: 서버로부터 받은 값을 저장하는 큐, Queue 객체
         status_queue: 차량 제어를 위한 큐, Queue 객체
     """
@@ -58,7 +58,7 @@ class RcSocket(threading.Thread):
         file_name = os.listdir('/home/pi/Desktop/picture')
         sendingfile = file_name[0].encode()
         self.clientSocket.send(sendingfile)
-        camera.removeAllFile(path)
+        # camera.removeAllFile(path)
 
     def _receive_data(self, file_queue):
         data = self.clientSocket.recv(1024)
@@ -77,6 +77,7 @@ class RcSocket(threading.Thread):
             self._clientsocket_send()
             self._receive_data(self.file_queue)
             self.status_queue.get()
+            
 
 # 메인 스레드
 class MainThread(threading.Thread):
@@ -109,8 +110,7 @@ class MainThread(threading.Thread):
             status_queue.put(1)
 
     def run(self):
-        self.receiver(self.file_queue, self.status_queue)
-
+        self.receiver(self.file_queue,self.status_queue)
 
 
 def run():
@@ -118,8 +118,8 @@ def run():
     status_queue = Queue()
 
     socket_instance = RcSocket('13.48.157.80', 9999, file_queue, status_queue)
-    main_instance = MainThread(file_queue, status_queue)
     socket_instance.start()
+    main_instance = MainThread(file_queue, status_queue)
     main_instance.start()
 
     rc_repeat()
